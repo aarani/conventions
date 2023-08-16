@@ -858,19 +858,27 @@ let GitHubApiCall(url: string) =
                             "Unexpected 404 received from GitHub API, using ACCESS_TOKEN properly"
 
                 | Some statusCode when statusCode = HttpStatusCode.Forbidden ->
-                    let permissionsErrMsg = sprintf """%s passed doesn't seem to have enough permissions.
+                    let permissionsErrMsg =
+                        sprintf
+                            """%s passed doesn't seem to have enough permissions.
 To modify the permissions of your token, navigate to the Settings section of your
 repository or organization and click on Actions button, then select General. From
 'Workflow permissions' section on that page, choose 'Read and write permissions'
-(which grants access to content and the ability to make changes).
-""" accessTokenName
+(which grants access to content and the ability to make changes)."""
+                            accessTokenName
+
                     if accessTokenName = "ACCESS_TOKEN" then
                         failwith permissionsErrMsg
                     else
                         let msg =
                             "Or maybe you have to use an ACCESS_TOKEN instead: "
 
-                        failwith (permissionsErrMsg + Environment.NewLine + msg + accessTokenErrorMsg)
+                        failwith(
+                            permissionsErrMsg
+                            + Environment.NewLine
+                            + msg
+                            + accessTokenErrorMsg
+                        )
 
                 | _ -> reraise()
 
